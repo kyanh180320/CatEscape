@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public float vertical;
     Vector2 move;
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -30,7 +31,8 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        rb.velocity = new Vector3(horizontal * speed*Time.deltaTime, rb.velocity.y, vertical * speed*Time.deltaTime);
+        Vector3 movement = new Vector3(horizontal,0,vertical).normalized;
+        rb.velocity = movement * speed*Time.deltaTime;
     }
     private void OnTriggerEnter(Collider other)
     {
