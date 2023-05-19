@@ -8,9 +8,9 @@ public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private Joystick joystick;
-    [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject endGameScreen;
+    [SerializeField] GameObject continueButton, tryAgainButton;
     [SerializeField] private float speed;
-    public TextMeshProUGUI textLoose, textWin;
     Rigidbody rb;
     public float horizontal;
     public float vertical;
@@ -25,12 +25,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.GetStateGame()) return;
         horizontal = joystick.Horizontal;
         vertical = joystick.Vertical;
     }
     private void FixedUpdate()
     {
+        if (GameManager.instance.GetStateGame()) return;
         Vector3 movement = new Vector3(horizontal,0,vertical).normalized;
         rb.velocity = movement * speed*Time.deltaTime;
     }
@@ -38,20 +38,25 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("DeadZone"))
         {
-            panel.SetActive(true);
-            textLoose.gameObject.SetActive(true);
+            endGameScreen.SetActive(true);
             GameManager.instance.SetStateGame(true);
+            SetStateButton(true);
             joystick.gameObject.SetActive(false);
         }
         else if (other.gameObject.CompareTag("WinZone"))
         {
-            panel.SetActive(true);
-            textWin.gameObject.SetActive(true);
-            GameManager.instance.SetStateGame(true) ;
+            endGameScreen.SetActive(true);
+            GameManager.instance.SetStateGame(true);
+            SetStateButton(false);
             joystick.gameObject.SetActive(false);
 
 
         }
+    }
+    void SetStateButton(bool state)
+    {
+        tryAgainButton.SetActive(state);
+        continueButton.SetActive(!state);
     }
  
 

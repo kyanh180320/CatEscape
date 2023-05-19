@@ -5,13 +5,13 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     // Start is called before the first frame update
-    float degreesPerSecond = 20;
+    float degreesPerSecond = 2;
     bool rotate;
     private void Update()
     {
-        if (rotate)
+    
         {
-            transform.Rotate(new Vector3(0, degreesPerSecond, 0) * Time.deltaTime);
+            transform.Rotate(new Vector3(0, degreesPerSecond, 0));
         
         }
       

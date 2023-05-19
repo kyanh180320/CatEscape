@@ -55,14 +55,10 @@ public class EnemyController : MonoBehaviour
         if (rotateEnemyEndPos)
         {
             RotateEnemy(180);
-            print("rotateEnemyEndPos :" + rotateEnemyEndPos);
-
-
         }
 
         if (rotateEnemyStartPos)
         {
-            print("RotateEnemyStartPos: " + rotateEnemyStartPos);
             RotateEnemy(358f);
         }
 
