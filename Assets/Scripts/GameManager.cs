@@ -9,24 +9,26 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     bool stateGame;
     public static GameManager instance;
-    [SerializeField] GameObject endGameScreen;
+    [SerializeField] GameObject continueGameDisplay, replayGameDisplay;
     int levelOrder;
+    GameObject currentLevel;
+    GameObject tempLevel;
     private void Awake()
     {
         instance = this;
     }
     void Start()
     {
-        levelOrder = 1;
-        string levelName = "Level/Level" + levelOrder;
-        GameObject levelPrefab = Resources.Load<GameObject>(levelName);
-        if (levelPrefab != null)
-        {
-            GameObject levelInstance = Instantiate(levelPrefab);
-            // Code khởi tạo và xử lý các thành phần của LevelInstance (nếu cần)
-            levelOrder++;
 
+        if (PlayerPrefs.HasKey("levelOrder"))
+        {
+            levelOrder = PlayerPrefs.GetInt("levelOrder");
         }
+        else
+        {
+            levelOrder = 1;
+        }
+        LoadCurrentLevel();
     }
 
     // Update is called once per frame
@@ -40,32 +42,56 @@ public class GameManager : MonoBehaviour
     }
     public bool GetStateGame()
     {
-        return stateGame;   
+        return stateGame;
     }
-    public void ReplayGame()
-    {
-        print("H");
-        SceneManager.LoadScene(0);
-    }
+    //public void ReplayGame()
+    //{
+    //    print("H");
+    //    SceneManager.LoadScene(0);
+    //}
     public void NextLevel()
     {
-        
-        Debug.Log("NextLevl");
-        string levelName = "Level/Level" + levelOrder; // Đường dẫn tới tài nguyên Level2 (đúng tên tài nguyên và đúng đường dẫn)
-        GameObject levelPrefab = Resources.Load<GameObject>(levelName);
-        if (levelPrefab != null)
+        if (currentLevel != null)
         {
-            GameObject levelInstance = Instantiate(levelPrefab);
-            // Code khởi tạo và xử lý các thành phần của LevelInstance (nếu cần)
-            levelOrder++;
+            Destroy(currentLevel);
+        }
+
+        continueGameDisplay.gameObject.SetActive(false);
+        levelOrder++;
+        PlayerPrefs.SetInt("levelOrder", levelOrder);
+        LoadCurrentLevel();
+
+    }
+    public void Replaylevel()
+    {
+        replayGameDisplay.SetActive(false);
+        if (currentLevel != null)
+        {
+            Destroy(currentLevel);
+        }
+        LoadCurrentLevel();
+    }
+    public void LoadCurrentLevel()
+    {
+        string levelName = "Level/Level" + levelOrder;
+        GameObject levelPrefabs = Resources.Load<GameObject>(levelName);
+        if (levelPrefabs != null)
+        {
+            currentLevel = Instantiate(levelPrefabs);
         }
         else
         {
-            Debug.LogError("Không thể tải tài nguyên Level2 từ thư mục Resources!");
+            Debug.LogError("Loi khong load dc level tu Resources");
         }
-        endGameScreen.SetActive(false);
-
     }
+    public void ResetGame()
+    {
+        Destroy(currentLevel);
+        PlayerPrefs.DeleteKey("levelOrder");
+        levelOrder = 1;
+        LoadCurrentLevel();
+    }
+
 
 
 

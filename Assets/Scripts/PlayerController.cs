@@ -8,17 +8,19 @@ public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private Joystick joystick;
-    [SerializeField] private GameObject endGameScreen;
-    [SerializeField] GameObject continueButton, tryAgainButton;
+    [SerializeField] private GameObject replayGameDisplay, continueGameDisplay;
     [SerializeField] private float speed;
     Rigidbody rb;
     public float horizontal;
     public float vertical;
     Vector2 move;
+    Vector3 startPos;
+    bool checkWinZone = true;
 
 
     void Start()
     {
+        startPos = transform.position;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -27,10 +29,10 @@ public class PlayerController : MonoBehaviour
     {
         horizontal = joystick.Horizontal;
         vertical = joystick.Vertical;
+       
     }
     private void FixedUpdate()
     {
-        if (GameManager.instance.GetStateGame()) return;
         Vector3 movement = new Vector3(horizontal,0,vertical).normalized;
         rb.velocity = movement * speed*Time.deltaTime;
     }
@@ -38,26 +40,23 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("DeadZone"))
         {
-            endGameScreen.SetActive(true);
-            GameManager.instance.SetStateGame(true);
-            SetStateButton(true);
-            joystick.gameObject.SetActive(false);
+            replayGameDisplay.SetActive(true);
+            transform.position = startPos;
         }
-        else if (other.gameObject.CompareTag("WinZone"))
-        {
-            endGameScreen.SetActive(true);
-            GameManager.instance.SetStateGame(true);
-            SetStateButton(false);
-            joystick.gameObject.SetActive(false);
-
-
-        }
+  
     }
-    void SetStateButton(bool state)
+    private void OnCollisionEnter(Collision collision)
     {
-        tryAgainButton.SetActive(state);
-        continueButton.SetActive(!state);
+        if (collision.gameObject.CompareTag("WinZone"))
+        {
+            print("Win zone");
+            continueGameDisplay.SetActive(true);
+            transform.position = startPos;
+        }
     }
- 
+
+
+
+
 
 }

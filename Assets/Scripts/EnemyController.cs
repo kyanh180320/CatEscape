@@ -59,7 +59,7 @@ public class EnemyController : MonoBehaviour
 
         if (rotateEnemyStartPos)
         {
-            RotateEnemy(358f);
+            RotateEnemy(357f);
         }
 
     }
