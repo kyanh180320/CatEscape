@@ -81,6 +81,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            ResetGame();
             Debug.LogError("Loi khong load dc level tu Resources");
         }
     }
